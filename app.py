@@ -37,7 +37,11 @@ class App(JobApp):
         self.rl_api_user: str = self.args.rl_api_user
         self.rl_api_password: str = self.args.rl_api_password
 
-        self.verbose: bool = bool(int(self.args.verbose))
+        try:
+            self.verbose: bool = bool(int(self.args.verbose))
+        except Exception as e:
+            self.info(f"{e}")
+
         if self.verbose:
             self.info(f"{self.args}")
 
