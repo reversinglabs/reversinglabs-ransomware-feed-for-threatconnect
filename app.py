@@ -117,7 +117,7 @@ class App(JobApp):
                 # 'lastUpdate': '2021-09-03T09:08:23.388178Z'
                 lastUpdate = row["lastUpdate"]
                 lu = datetime.datetime.strptime(lastUpdate[:19], "%Y-%m-%dT%H:%M:%S")
-                if self.last_run > lu:
+                if self.last_run and self.last_run > lu:
                     self.info(f"SKIP: last_run {self.last_run} row.lastUpdate: {lu}")
                     return
         except Exeption as e:
