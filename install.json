@@ -1,0 +1,63 @@
+{
+  "appId": "945b8da5-c4f9-5196-9533-f9c15487a171",
+  "displayName": "reversinglabs-ransomware-feed-for-threatconnect",
+  "programVersion": "1.0.0",
+
+  "programLanguage": "PYTHON",
+  "languageVersion": "3.6",
+
+  "programMain": "run",
+  "runtimeLevel": "Organization",
+
+  "allowOnDemand": true,
+  "listDelimiter": "|",
+
+  "features": [
+    "fileParams",
+    "secureParams"
+  ],
+
+  "params": [
+    {
+      "label": "ThreatConnect Owner",
+      "name": "tc_owner",
+      "note": "The owner from which indicators (and maybe groups) will be counted",
+      "required": true,
+      "sequence": 1,
+      "type": "Choice",
+      "validValues": [
+        "${OWNERS}"
+      ]
+    },
+    {
+      "label": "ReversingLabs TiCloud user",
+      "name": "rl_api_user",
+      "note": "The ReversingLabs cloud account user: request at support@reversinglabs.com",
+      "sequence": 2,
+      "required": true,
+      "type": "String",
+      "validValues": [
+        "${USER:TEXT}",
+        "${ORGANIZATION:TEXT}"
+      ]
+    },
+    {
+      "label": "ReversingLabs TiCloud password",
+      "name": "rl_api_password",
+      "note": "The ReversingLabs cloud account password",
+      "sequence": 3,
+      "required": true,
+      "encrypt": true,
+      "type": "String",
+      "validValues": [
+        "${USER:KEYCHAIN}",
+        "${ORGANIZATION:KEYCHAIN}"
+      ]
+    }
+  ],
+  "retry": {
+    "allowed": true,
+    "defaultDelayMinutes": 1,
+    "defaultMaxRetries": 5
+  }
+}
