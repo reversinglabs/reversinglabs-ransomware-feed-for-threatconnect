@@ -1,6 +1,6 @@
 {
   "package": {
-    "app_name": "rl-ransomware-feed",
+    "app_name": "reversinglabs-ransomware-feed-for-threatconnect",
     "excludes": [
       "*.install.json",
       ".gitignore",
