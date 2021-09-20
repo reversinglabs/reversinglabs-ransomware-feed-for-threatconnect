@@ -37,7 +37,11 @@ class App(JobApp):
         self.rl_api_user: str = self.args.rl_api_user
         self.rl_api_password: str = self.args.rl_api_password
 
-        self.verbose: bool = bool(int(self.args.verbose))
+        try:
+            self.verbose: bool = bool(int(self.args.verbose))
+        except Exception as e:
+            self.info(f"{e}")
+
         if self.verbose:
             self.info(f"{self.args}")
 
@@ -113,7 +117,7 @@ class App(JobApp):
                 # 'lastUpdate': '2021-09-03T09:08:23.388178Z'
                 lastUpdate = row["lastUpdate"]
                 lu = datetime.datetime.strptime(lastUpdate[:19], "%Y-%m-%dT%H:%M:%S")
-                if self.last_run > lu:
+                if self.last_run and self.last_run > lu:
                     self.info(f"SKIP: last_run {self.last_run} row.lastUpdate: {lu}")
                     return
         except Exeption as e:
