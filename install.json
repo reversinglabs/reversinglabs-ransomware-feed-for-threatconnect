@@ -54,10 +54,5 @@
         "${ORGANIZATION:KEYCHAIN}"
       ]
     }
-  ],
-  "retry": {
-    "allowed": true,
-    "defaultDelayMinutes": 1,
-    "defaultMaxRetries": 5
-  }
+  ]
 }
