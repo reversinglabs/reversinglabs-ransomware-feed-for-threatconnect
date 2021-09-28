@@ -1,4 +1,4 @@
 # Release Notes
 
-## 1.0.0 (YYYY-MM-DD)
+## 1.0.0 (2021-09-28)
 * Initial Release
