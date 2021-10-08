@@ -1,7 +1,7 @@
 {
   "appId": "945b8da5-c4f9-5196-9533-f9c15487a171",
   "displayName": "reversinglabs-ransomware-feed-for-threatconnect",
-  "programVersion": "1.0.0",
+  "programVersion": "1.0.2",
 
   "programLanguage": "PYTHON",
   "languageVersion": "3.6",
@@ -54,5 +54,16 @@
         "${ORGANIZATION:KEYCHAIN}"
       ]
     }
-  ]
+  ],
+  "feeds": [
+    {
+      "documentStorageLimitMb": 10,
+      "enableBulkJson": true,
+      "indicatorLimit": 2000000,
+      "jobFile": "reversinglabs-ransomware-job.json",
+      "sourceCategory": "Premium",
+      "sourceDescription": "ReversingLabs ransomware indicator feed",
+      "sourceName": "ReversingLabs Ransomware Feed"
+    }
+  ],
 }
