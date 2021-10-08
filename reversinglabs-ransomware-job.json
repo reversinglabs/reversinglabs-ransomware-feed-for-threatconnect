@@ -1,0 +1,32 @@
+{
+  "programName": "reversinglabs-ransomware-feed-for-threatconnect v1",
+  "programVersion": "1.0.2",
+  "jobName": "Fetch ReversingLabs Ransomware Hourly",
+
+  "allowOnDemand": true,
+  "publishAuth": false,
+
+  "scheduleType": "Advanced",
+  "scheduleCronFormat": "0 0 * * * ?",
+  "scheduleStartDate": 1633075952625,
+
+  "enableNotifications": false,
+  "notifyOnFailure": false,
+  "notifyOnPartialFailure": false,
+  "notifyOnComplete": false,
+  "notifyEmail": "",
+  "notifyIncludeLogFiles": false,
+
+  "params": [
+    {
+      "name": "rl_api_password"
+    },
+    {
+      "name": "rl_api_user"
+    },
+    {
+      "name": "tc_owner",
+      "default": "ReversingLabs Ransomware Feed"
+    }
+  ]
+}
