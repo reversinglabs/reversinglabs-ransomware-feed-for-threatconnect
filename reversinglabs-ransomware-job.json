@@ -1,5 +1,5 @@
 {
-  "programName": "reversinglabs-ransomware-feed-for-threatconnect v1",
+  "programName": "ReversingLabs Ransomware v1",
   "programVersion": "1.0.2",
   "jobName": "Fetch ReversingLabs Ransomware Hourly",
 
@@ -27,6 +27,11 @@
     {
       "name": "tc_owner",
       "default": "ReversingLabs Ransomware Feed"
+    },
+    {
+      "name": "tc_log_level",
+      "default": "debug",
+      "preventUpdates": false
     }
   ]
 }
