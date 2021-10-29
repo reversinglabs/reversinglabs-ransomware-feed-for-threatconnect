@@ -1,6 +1,6 @@
 {
   "programName": "ReversingLabs Ransomware v1",
-  "programVersion": "1.0.2",
+  "programVersion": "1.0.3",
   "jobName": "Fetch ReversingLabs Ransomware Hourly",
 
   "allowOnDemand": true,
