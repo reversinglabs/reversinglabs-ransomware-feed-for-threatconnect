@@ -1,5 +1,8 @@
 # Release Notes
 
+## 1.0.3 (2021-10-29)
+* fixes for deployment in json files, adding proper flags
+
 ## 1.0.2 (2021-10-08)
 * Feed parameters and job json
 
