@@ -1,7 +1,7 @@
 {
   "appId": "945b8da5-c4f9-5196-9533-f9c15487a171",
-  "displayName": "reversinglabs-ransomware-feed-for-threatconnect",
-  "programVersion": "1.0.2",
+  "displayName": "ReversingLabs Ransomware",
+  "programVersion": "1.0.3",
 
   "programLanguage": "PYTHON",
   "languageVersion": "3.6",
@@ -23,6 +23,7 @@
       "name": "tc_owner",
       "note": "The owner from which indicators (and maybe groups) will be counted",
       "required": true,
+      "feedDeployer": false,
       "sequence": 1,
       "type": "Choice",
       "validValues": [
@@ -35,6 +36,7 @@
       "note": "The ReversingLabs cloud account user: request at support@reversinglabs.com",
       "sequence": 2,
       "required": true,
+      "feedDeployer": true,
       "type": "String",
       "validValues": [
         "${USER:TEXT}",
@@ -47,11 +49,27 @@
       "note": "The ReversingLabs cloud account password",
       "sequence": 3,
       "required": true,
+      "feedDeployer": true,
       "encrypt": true,
       "type": "String",
       "validValues": [
         "${USER:KEYCHAIN}",
         "${ORGANIZATION:KEYCHAIN}"
+      ]
+    },
+    {
+      "label": "Log Level",
+      "name": "tc_log_level",
+      "note": "The logging level you desire for this job",
+      "required": true,
+      "default": "warning",
+      "type": "Choice",
+      "validValues": [
+        "debug",
+        "info",
+        "warning",
+        "error",
+        "critical"
       ]
     }
   ],
