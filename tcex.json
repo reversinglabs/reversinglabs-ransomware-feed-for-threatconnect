@@ -1,6 +1,6 @@
 {
   "package": {
-    "app_name": "ReversingLabs Ransomware",
+    "app_name": "ReversingLabs_Ransomware",
     "excludes": [
       "*.install.json",
       ".gitignore",
