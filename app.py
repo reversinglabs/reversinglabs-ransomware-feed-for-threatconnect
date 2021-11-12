@@ -118,7 +118,7 @@ class App(JobApp):
                 lastUpdate = row["lastUpdate"]
                 lu = datetime.datetime.strptime(lastUpdate[:19], "%Y-%m-%dT%H:%M:%S")
                 if self.last_run and self.last_run > lu:
-                    self.info(f"SKIP: last_run {self.last_run} row.lastUpdate: {lu}")
+                    self.info(f"SKIP: last_run {self.last_run} > row.lastUpdate: {lu}")
                     return
         except Exeption as e:
             self.info(f"ignoring issues in early skip test: {e}")
@@ -162,7 +162,27 @@ class App(JobApp):
         msg = f"{s} {dd}"
         self.info(msg)
 
+        hTypes = [
+            "sha1", "md5", "sha256",
+        ]
+        shTypes = ",".join(hTypes)
+
+        iTypes = [
+            "Hash", "ipv4", "domain", "uri",
+        ]
+        siTypes = ",".join(iTypes)
+
+        zz = [
+            f"hours={self.interval}",
+            f"indicatorTypes={shTypes}",
+            f"hashTypes={siTypes}",
+        ]
+
+        zzs = "&".join(zz)
+
+        appUri: str = f"/api/public/v1/ransomware/indicators?{zzs}"
         appUri: str = f"/api/public/v1/ransomware/indicators?hours={self.interval}"
+
         msg: str = f"url: {self.session.base_url}{appUri}"
         self.info(msg)
 
