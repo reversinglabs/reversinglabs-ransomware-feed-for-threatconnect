@@ -4,6 +4,7 @@ import json
 import time
 import datetime
 import math
+from urllib.parse import urlparse
 
 # first-party
 from job_app import JobApp  # Import default Job App Class (Required)
@@ -18,6 +19,10 @@ class App(JobApp):
     verbose: bool = False
     retryCount: int = 5
     sleepTime: int = 60
+
+    maxFetchHours = 24
+    minFetchHours = 2
+    uriMaxLen = 500
 
     now = None
     last_run = None
@@ -60,13 +65,15 @@ class App(JobApp):
 
         if self.last_run:
             self.interval = int(math.ceil((self.now - self.last_run).total_seconds() / 3600))
+        else:
+            self.interval = self.maxFetchHours
 
-        # minimal interval = 2 hours, maximal interval is 48 hours
-        if self.interval <= 0 or self.interval > 48:
-            self.interval = 48
+        # minimal interval = minFetchHours hours, maximal interval is maxFetchHours hours
+        if self.interval > self.maxFetchHours:
+            self.interval = self.maxFetchHours
 
-        if self.interval < 2:
-            self.interval = 2
+        if self.interval < self.minFetchHours:
+            self.interval = self.minFetchHours
 
         msg: str = f"last run: {self.last_run} now: {self.now} diff: {self.interval}"
         self.info(msg)
@@ -102,12 +109,14 @@ class App(JobApp):
         self.tcex.exit(1, "Failed to download data.")
 
     def runOneRow(self, row, what):
+
         indicator_type: str = row["indicatorType"]
+
+        # ---------------------------------------
         if indicator_type not in what:
             msg: str = f"type not supported: {indicator_type};{row}"
             self.info(msg)
             return
-        name: str = what[indicator_type]
 
         try:
             if row["deleted"] is True:
@@ -120,17 +129,32 @@ class App(JobApp):
                 if self.last_run and self.last_run > lu:
                     self.info(f"SKIP: last_run {self.last_run} > row.lastUpdate: {lu}")
                     return
-        except Exeption as e:
+
+        except Exception as e:
             self.info(f"ignoring issues in early skip test: {e}")
 
+        # ---------------------------------------
         msg: str = f"processing row: {row}"
         self.info(msg)
 
         # extract data
+        name: str = what[indicator_type]
         indicator_value: str = row["indicatorValue"]
         indicator_tags: str = row["indicatorTags"]
         rating: str = row["rating"]
         confidence: str = row["confidence"]
+
+        if name == "URL":
+            if len(indicator_value) > self.uriMaxLen:
+                self.info(f"ignoring uri with value len > maxUriLen:500: {indicator_value}")
+                return
+
+            # if needed convert the front domain part to lowercase
+            zz = urlparse(indicator_value)
+            if zz.netloc.lower() != zz.netloc:
+                ll = zz.netloc.lower()
+                zz = zz._replace(netloc=ll)
+                indicator_value = zz.geturl()
 
         # make a xid from the iType and iValue so we can update the same indicator
         xid: str = f"{indicator_type}.{indicator_value}"
@@ -162,34 +186,34 @@ class App(JobApp):
         msg = f"{s} {dd}"
         self.info(msg)
 
-        hTypes = [
-            "sha1", "md5", "sha256",
-        ]
-        shTypes = ",".join(hTypes)
+        # the default
+        # appUri: str = f"/api/public/v1/ransomware/indicators?hours={self.interval}"
 
         iTypes = [
-            "Hash", "ipv4", "domain", "uri",
+            "Hash",
+            "ipv4",
+            "domain",
+            "uri",
         ]
         siTypes = ",".join(iTypes)
 
         zz = [
             f"hours={self.interval}",
-            f"indicatorTypes={shTypes}",
-            f"hashTypes={siTypes}",
+            f"indicatorTypes={siTypes}",
         ]
 
         zzs = "&".join(zz)
 
         appUri: str = f"/api/public/v1/ransomware/indicators?{zzs}"
-        appUri: str = f"/api/public/v1/ransomware/indicators?hours={self.interval}"
 
         msg: str = f"url: {self.session.base_url}{appUri}"
         self.info(msg)
 
         what = {
+            "Hash": "File",
             "ipv4": "Address",
             "domain": "Host",
-            "Hash": "File",
+            "uri": "URL",
         }
 
         with self.session as s:
@@ -216,9 +240,7 @@ class App(JobApp):
         msg: str = f"last_run {last_run}"
         self.info(msg)
 
-        self.exit_message = (  # pylint: disable=attribute-defined-outside-init
-            'Downloaded data and create batch job.'
-        )
+        self.exit_message = 'Downloaded data and create batch job.'  # pylint: disable=attribute-defined-outside-init
 
         msg: str = "run end"
         self.info(msg)
