@@ -1,5 +1,8 @@
 # Release Notes
 
+## 1.0.4 (2021-11-16)
+* add URL type indicators
+
 ## 1.0.3 (2021-10-29)
 * fixes for deployment in json files, adding proper flags
 
