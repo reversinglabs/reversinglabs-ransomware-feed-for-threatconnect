@@ -6,6 +6,7 @@ import time
 import datetime
 import math
 from urllib.parse import urlparse
+import urllib.parse
 
 # first-party
 from job_app import JobApp  # Import default Job App Class (Required)
@@ -155,6 +156,26 @@ class App(JobApp):
                 self.info(msg)
             return False
 
+        def creIndicator(iType, iValue):
+            # make a xid from the iType and iValue so we can update the same indicator
+            xid: str = f"{iType}.{iValue}"
+
+            # create the batch entry
+            item: object = self.batch.indicator(
+                tcName,
+                iValue,
+                rating=rating,
+                confidence=confidence,
+                xid=xid,
+            )
+
+            # add all tags
+            for tag in indicator_tags:
+                item.tag(tag)
+
+            # save object to disk, for large batches this saved memory, says the manual
+            self.batch.save(item)
+
         # ---------------------------------------
         indicator_type: str = row["indicatorType"]
         if indicator_type not in whatMap:
@@ -185,24 +206,19 @@ class App(JobApp):
 
             indicator_value = fixUrlDomainLower(indicator_value)
 
-        # make a xid from the iType and iValue so we can update the same indicator
-        xid: str = f"{indicator_type}.{indicator_value}"
+        if tcName != "File":
+            creIndicator(indicator_type, indicator_value)
+            return
 
-        # create the batch entry
-        item: object = self.batch.indicator(
-            tcName,
-            indicator_value,
-            rating=rating,
-            confidence=confidence,
-            xid=xid,
-        )
+        k = "hash"
+        if k not in row:
+            creIndicator(indicator_type, indicator_value)
+            return
 
-        # add all tags
-        for tag in indicator_tags:
-            item.tag(tag)
-
-        # save object to disk, for large batches this saved memory, says the manual
-        self.batch.save(item)
+        # add all hashes of a file indicator if they exist
+        for n in ["sha1", "md5", "sha256"]:
+            if n in row[k]:
+                creIndicator(indicator_type, row[k][n])
 
     def run(self):
         """Run main App logic."""

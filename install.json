@@ -1,7 +1,7 @@
 {
   "appId": "945b8da5-c4f9-5196-9533-f9c15487a171",
   "displayName": "ReversingLabs Ransomware",
-  "programVersion": "1.0.4",
+  "programVersion": "1.0.5",
 
   "programLanguage": "PYTHON",
   "languageVersion": "3.6",
