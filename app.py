@@ -6,7 +6,8 @@ import time
 import datetime
 import math
 from urllib.parse import urlparse
-import urllib.parse
+
+# import urllib.parse
 
 # first-party
 from job_app import JobApp  # Import default Job App Class (Required)
@@ -156,7 +157,11 @@ class App(JobApp):
                 self.info(msg)
             return False
 
-        def creIndicator(iType, iValue):
+        def creIndicator(iType, iValue, row):
+            rating: str = row["rating"]
+            confidence: str = row["confidence"]
+            indicator_tags: str = row["indicatorTags"]
+
             # make a xid from the iType and iValue so we can update the same indicator
             xid: str = f"{iType}.{iValue}"
 
@@ -172,6 +177,12 @@ class App(JobApp):
             # add all tags
             for tag in indicator_tags:
                 item.tag(tag)
+
+            if tcName == "File" and "hash" in row:
+                for key in ["sha1", "md5", "sha256"]:
+                    if key in row["hash"]:
+                        xx = row["hash"][key]
+                        item.add_key_value(key, xx)
 
             # save object to disk, for large batches this saved memory, says the manual
             self.batch.save(item)
@@ -193,9 +204,6 @@ class App(JobApp):
             return
 
         # ---------------------------------------
-        rating: str = row["rating"]
-        confidence: str = row["confidence"]
-        indicator_tags: str = row["indicatorTags"]
         indicator_value: str = row["indicatorValue"]
 
         if tcName == "URL":
@@ -206,19 +214,8 @@ class App(JobApp):
 
             indicator_value = fixUrlDomainLower(indicator_value)
 
-        if tcName != "File":
-            creIndicator(indicator_type, indicator_value)
-            return
-
-        k = "hash"
-        if k not in row:
-            creIndicator(indicator_type, indicator_value)
-            return
-
-        # add all hashes of a file indicator if they exist
-        for n in ["sha1", "md5", "sha256"]:
-            if n in row[k]:
-                creIndicator(indicator_type, row[k][n])
+        creIndicator(indicator_type, indicator_value, row)
+        return
 
     def run(self):
         """Run main App logic."""
