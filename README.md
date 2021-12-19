@@ -1,5 +1,8 @@
 # Release Notes
 
+## 1.0.6 (2021-12-19)
+* add md5 and sha256 for File indicators, now integrated on the single file indicator
+
 ## 1.0.5 (2021-11-20)
 * add md5 and sha256 for File indicators
 
